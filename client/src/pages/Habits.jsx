@@ -34,8 +34,8 @@ const Habits = () => {
             <h2 className="text-lg font-semibold uppercase mb-2">
               {habit.title}
             </h2>
-            <h2 className="text-sm font-semibold uppercase line-clamp-2">
-              {habit.description}
+            <h2 className="text-xs font-semibold uppercase line-clamp-2">
+              {habit.desc}
             </h2>
             <button
               type="button"

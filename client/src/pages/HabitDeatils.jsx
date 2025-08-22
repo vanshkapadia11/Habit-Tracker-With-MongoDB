@@ -15,6 +15,18 @@ const HabitDetails = () => {
   const [editedTitle, setEditedTitle] = useState("");
   const [editedDesc, setEditedDesc] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedPriority, setSelectedPriority] = useState("");
+
+  const priorityColors = {
+    "green-500": "bg-green-500",
+    "amber-500": "bg-amber-500",
+    "rose-500": "bg-rose-500",
+  };
+  const priorityArray = [
+    ["green-500", "low"],
+    ["amber-500", "medium"],
+    ["rose-500", "high"],
+  ];
 
   const fireConfetti = useCallback(() => {
     if (confettiRef.current) {
@@ -31,6 +43,7 @@ const HabitDetails = () => {
     const fetchHabit = async () => {
       try {
         const { data } = await axios.get(`/api/habits/${habitId}`);
+        // console.log("habit.priority:", habit.priority[1]);
         if (data.user !== user._id) {
           navigate("/"); // unauthorized
         } else {
@@ -72,10 +85,12 @@ const HabitDetails = () => {
   // Save edited habit
   const saveEdit = async () => {
     try {
+      console.log();
       const updatedHabit = {
         ...habit,
         title: editedTitle,
         desc: editedDesc,
+        priority: selectedPriority,
       };
       setHabit(updatedHabit);
       setIsEditing(false);
@@ -83,6 +98,7 @@ const HabitDetails = () => {
       await axios.patch(`/api/habits/${habitId}`, {
         title: editedTitle,
         desc: editedDesc,
+        priority: selectedPriority,
       });
     } catch (error) {
       console.error("Edit failed:", error);
@@ -156,6 +172,25 @@ const HabitDetails = () => {
               className="w-full uppercase p-3 mb-6 border rounded-lg outline-none text-sm font-semibold dark:bg-[#242424] dark:ring-[#2a2a2a] ring-1 ring-[#e8e8e8] ring-inset"
               required
             />
+            <div className="mb-10 flex flex-wrap gap-3">
+              {priorityArray.map((item) => (
+                <div
+                  key={item[0]}
+                  onClick={() => setSelectedPriority(item)}
+                  className={`bg-${
+                    item[0]
+                  } w-fit px-3 py-2 rounded-lg cursor-pointer text-sm font-semibold uppercase text-white
+    ${
+      selectedPriority[0] === item[0]
+        ? "border border-black dark:border-white scale-110"
+        : "border-transparent"
+    }
+    transition-all duration-200`}
+                >
+                  {item[1]}
+                </div>
+              ))}
+            </div>
             <div className="flex gap-2 w-full justify-center items-center">
               <button
                 onClick={() => setIsEditing(false)}
@@ -191,9 +226,15 @@ const HabitDetails = () => {
           <h2 className="text-2xl font-semibold uppercase heading2">
             {habit.title}
           </h2>
-          <p className="text-sm font-semibold uppercase heading1 mt-2">
+          <p className="text-sm font-semibold uppercase heading1 mt-2 mb-10">
             {habit.desc}
           </p>
+          <span
+            className={`${priorityColors[habit.priority[0]] || "bg-gray-400"} 
+              text-white text-sm font-semibold uppercase px-3 py-1 rounded-lg`}
+          >
+            {habit.priority[1]}
+          </span>
         </div>
 
         {!isCompleted ? (

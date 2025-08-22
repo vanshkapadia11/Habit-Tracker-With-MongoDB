@@ -13,6 +13,7 @@ userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next(); // Means Then Do Forward!! --> Matlab Upar Wala Karne Ke Baad Move Forward!!
+  // Next Wali Chaiz Ka Matlab Ye Hai Ki Agar Password Update Kiya Nahi Hai Toh Wapis Hash Mat Kar Kyu Ki Agar Wapis Kiya To Alag Hash Banega Aur Pass Bhi Alag Ho Jayega!!
 });
 
 // Compare password method

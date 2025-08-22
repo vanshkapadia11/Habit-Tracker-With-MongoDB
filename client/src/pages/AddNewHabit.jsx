@@ -3,7 +3,6 @@ import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import axios from "../utils/api"; // Axios instance
 import { useAuth } from "../context/AuthContext";
-import { v4 as uuidv4 } from "uuid";
 
 const AddNewHabit = () => {
   const { user } = useAuth();
@@ -11,6 +10,12 @@ const AddNewHabit = () => {
   const [useTitle, setUseTitle] = useState("");
   const [useDesc, setUseDesc] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [selectedPriority, setSelectedPriority] = useState("");
+  const priorityArray = [
+    ["green-500", "low"],
+    ["amber-500", "medium"],
+    ["rose-500", "high"],
+  ];
 
   const colorArray = [
     "bg-red-100",
@@ -41,14 +46,13 @@ const AddNewHabit = () => {
       alert("Please select a color for your habit!");
       return;
     }
-
     const newHabit = {
       title: useTitle.trim(),
       desc: useDesc.trim(),
-      priority: "medium", // or make this selectable later
-      planner: Array(21).fill(false), // 21-day tracker
+      priority: selectedPriority, // stays as ["amber-500", "medium"]
+      planner: Array(21).fill(false),
       color: selectedColor,
-      userId: user._id, // Make sure AuthContext provides _id from MongoDB
+      userId: user._id,
     };
 
     try {
@@ -133,6 +137,29 @@ const AddNewHabit = () => {
                       : "border-transparent"
                   } transition-all duration-200`}
                 ></div>
+              ))}
+            </div>
+
+            <h2 className="text-sm font-semibold mb-5 uppercase">
+              Select A Proirity!
+            </h2>
+            <div className="mb-10 flex flex-wrap gap-3">
+              {priorityArray.map((item) => (
+                <div
+                  key={item[0]}
+                  onClick={() => setSelectedPriority(item)}
+                  className={`bg-${
+                    item[0]
+                  } w-fit px-3 py-2 rounded-lg cursor-pointer text-sm font-semibold uppercase text-white
+    ${
+      selectedPriority[0] === item[0]
+        ? "border border-black dark:border-white scale-110"
+        : "border-transparent"
+    }
+    transition-all duration-200`}
+                >
+                  {item[1]}
+                </div>
               ))}
             </div>
 

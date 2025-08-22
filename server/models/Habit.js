@@ -4,8 +4,8 @@ const habitSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
   desc: { type: String },
   priority: {
-    type: String,
-    enum: ["low", "medium", "high"],
+    type: [String],
+    // enum: ["low", "medium", "high"],
     default: "medium",
   }, // FIXED
   planner: {
